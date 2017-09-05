@@ -15,13 +15,16 @@ public class TestDataStructure {
 		myList.add(2,2);
 		myList.add(3,3);
 		myList.add(4,4);
-//		myList.add(4);
 		myList.remove(4);
+		
 		System.out.println("Current Size:" +myList.size());
 		System.out.println("Index 3 Element:"+ myList.get(3));
+		System.out.println("Contains 2?:"+ myList.contains(2));
+		
+		//Test toString
 		System.out.println(myList.toString());
 		
-//		//Test Iterator
+		//Test Iterator
 		Iterator<Integer> myIterator = myList.iterator();
 		while(myIterator.hasNext())
 		{

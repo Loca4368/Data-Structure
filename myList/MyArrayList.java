@@ -12,14 +12,12 @@ import java.util.NoSuchElementException;
 public class MyArrayList<T> implements Iterable <T>{
 	
 	
-	// Set Default ArrayList Size
+	//Set Default ArrayList Size
     private static final int DEFAULT_CAPACITY = 10;
   
     // Actual Size
 	private int size;
 	
-//	// Actual Capacity
-//	private int currentCapcity;
 	//Use array as a base to construct ArrayList
 	private T[] myArray;
 	
@@ -36,22 +34,22 @@ public class MyArrayList<T> implements Iterable <T>{
 			throw new IllegalArgumentException("Default Size:" + DEFAULT_CAPACITY);
         }
 		else{
+			
 			//Init arrayList
-//			currentCapcity = capacity;
 			myArray = (T[]) new Object[capacity];
         }
 	}
 	
 	//Validate index
-		public boolean isIndexValid(int index)
+	public boolean isIndexValid(int index)
+	{
+		if(index <= 0 || index-1 > size())
 		{
-			if(index <= 0 || index-1 > size())
-			{
-				return false;
+			return false;
 			}
-			else
-				return true;
-		}
+		else
+			return true;
+	}
 		
 	//Extends ArirayList Capacity
 	public void ensureCapacity(int newCapcity)
@@ -65,6 +63,7 @@ public class MyArrayList<T> implements Iterable <T>{
 			myArray[i] = old[i];
 			}
 		}
+	
 	//Get Index Element
 	public T get(int index){
 		
@@ -114,7 +113,7 @@ public class MyArrayList<T> implements Iterable <T>{
 	  	
 	}
 	
-	//Remove
+	//Remove by index
 	public void remove(int index)
 	{
 		//Throw exception when  index is out of bounds
@@ -175,10 +174,6 @@ public class MyArrayList<T> implements Iterable <T>{
         ensureCapacity(DEFAULT_CAPACITY);
 	}
 
-	
-	
-	
-	
 	//Override Iterator
 	public Iterator<T> iterator() {
 		// TODO Auto-generated method stub
