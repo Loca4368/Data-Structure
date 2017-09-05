@@ -1,6 +1,7 @@
 package testApp;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import myList.*;
 public class TestDataStructure {
@@ -9,17 +10,27 @@ public class TestDataStructure {
 		// TODO Auto-generated method stub
 		MyArrayList<Integer> myList= new MyArrayList<Integer>(3);
 		
-		System.out.println(myList.size());
 		myList.add(1,1);
-		System.out.println(myList.get(1));
 		myList.add(2,2);
 		myList.add(3,3);
 		myList.add(4,4);
 		myList.remove(4);
 		
-		System.out.println("Current Size:" +myList.size());
-		System.out.println("Index 3 Element:"+ myList.get(3));
+		System.out.println("Current Size:" + myList.size());
+		System.out.println("Index 3 Valu:"+ myList.get(3));
 		System.out.println("Contains 2?:"+ myList.contains(2));
+		
+		//Demo on catch Exception
+		try
+		{	
+			//Will throw NoSuchElementException
+			myList.get(9);
+		}
+		
+		catch(IndexOutOfBoundsException e)
+		{
+			System.out.println("NoSuchElementException"+e.getMessage());
+		}
 		
 		//Test toString
 		System.out.println(myList.toString());
