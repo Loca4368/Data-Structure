@@ -18,6 +18,8 @@ public class MyArrayList<T> implements Iterable <T>{
     // Actual Size
 	private int size;
 	
+//	// Actual Capacity
+//	private int currentCapcity;
 	//Use array as a base to construct ArrayList
 	private T[] myArray;
 	
@@ -30,23 +32,47 @@ public class MyArrayList<T> implements Iterable <T>{
 	//Constructor with an int argument
 	public MyArrayList(int capacity)
 	{
-		if (size < 0){
+		if (capacity < 0){
 			throw new IllegalArgumentException("Default Size:" + DEFAULT_CAPACITY);
         }
 		else{
-			//Init arrayList 
+			//Init arrayList
+//			currentCapcity = capacity;
 			myArray = (T[]) new Object[capacity];
         }
 	}
 	
+	//Validate index
+		public boolean isIndexValid(int index)
+		{
+			if(index <= 0 || index-1 > size())
+			{
+				return false;
+			}
+			else
+				return true;
+		}
+		
+	//Extends ArirayList Capacity
+	public void ensureCapacity(int newCapcity)
+	{
+		if(newCapcity < size){
+			return;
+			}
+		T[] old = myArray;
+		myArray = (T[])new Object[newCapcity];
+		for(int i = 0;i<size();i++){
+			myArray[i] = old[i];
+			}
+		}
 	//Get Index Element
 	public T get(int index){
 		
 		//Throw exception when  index is out of bounds
-		if(isIndexValid(index)){
+		if(!isIndexValid(index)){
 			throw new IndexOutOfBoundsException();
 		}
-		return myArray[index];
+		return myArray[index-1];
 	}
 	
 	
@@ -54,26 +80,27 @@ public class MyArrayList<T> implements Iterable <T>{
 	public void add(int index, T element)
 	{
 		//Throw exception if index is out of bounds
-		if(isIndexValid(index)){
+		if(!isIndexValid(index)){
 			throw new IndexOutOfBoundsException();
 		}
 		
-		//Extend ArrayList Size, If current number of element exceed current size of ArrayList
-        if(myArray.length == size()){
+		//Check if current Capacity enough or not for adding
+        if(myArray.length == size()+1){
             ensureCapacity(size() * 2 + 1);
         }
 		
+        
 		// Move affected elements backward for 1 position 
-		for(int i= size; i>index;i--)
+		for(int i= size(); i>=index-1;i--)
 		{
-			myArray[i] = myArray[i-1];
+			 myArray[i+1] = myArray[i];
 		}
 		
 		//Use System.arraycopy to move element
 //		System.arraycopy(element, index, element, index + 1,size - index);
 		
 		//Add new element to index position
-		myArray[index] = element;
+		myArray[index-1] = element;
 		
 		//Increase array size by 1
 		size++;
@@ -82,7 +109,7 @@ public class MyArrayList<T> implements Iterable <T>{
 	//By default, add new element to the last.
 	public boolean add(T element)
 	{
-		add(size(),element);
+		add(size()+1,element);
 	  	return true;
 	  	
 	}
@@ -91,11 +118,11 @@ public class MyArrayList<T> implements Iterable <T>{
 	public void remove(int index)
 	{
 		//Throw exception when  index is out of bounds
-		if(isIndexValid(index)){
+		if(!isIndexValid(index)){
 			throw new IndexOutOfBoundsException();
 		}
 		// Move affected elements forward for 1 position 
-		for(int i = index;i<size()-1;i++)
+		for(int i = index-1;i<size();i++)
 		{
 			myArray[i] = myArray[i+1];
 		}
@@ -126,11 +153,11 @@ public class MyArrayList<T> implements Iterable <T>{
 	public void set(int index, T newElement)
 	{
 		//Throw exception when  index is out of bounds
-		if(isIndexValid(index)){
+		if(!isIndexValid(index)){
 			throw new IndexOutOfBoundsException();
 		}
 		//Assign new value 
-		myArray[index] = newElement;
+		myArray[index-1] = newElement;
 					
 	}
 	
@@ -140,16 +167,6 @@ public class MyArrayList<T> implements Iterable <T>{
 		return size() == 0;
 	}
 	
-	//Validate index
-	public boolean isIndexValid(int index)
-	{
-		if(index < 0 || index >= size())
-		{
-			return false;
-		}
-		else
-			return true;
-	}
 	
 	//Clear List
 	public void clear()
@@ -158,20 +175,7 @@ public class MyArrayList<T> implements Iterable <T>{
         ensureCapacity(DEFAULT_CAPACITY);
 	}
 
-	//Extends ArirayList Size
-	public void ensureCapacity(int newCapacity)
-	{
-		
-		if(newCapacity < size){
-            return;
-        }
-        T[] current = myArray;
-     
-        myArray = (T[])new Object[newCapacity];
-        for(int i = 0;i<size();i++){
-            myArray[i] = current[i];
-        }
-	}
+	
 	
 	
 	
