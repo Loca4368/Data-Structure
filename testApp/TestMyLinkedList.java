@@ -1,5 +1,7 @@
 package testApp;
 
+import java.util.Iterator;
+
 import myList.MyLinkedList;
 public class TestMyLinkedList {
 
@@ -8,31 +10,21 @@ public class TestMyLinkedList {
 		
 //		System.out.println("Hello World!");
 		
-		MyLinkedList<Integer> myLinkedList = new MyLinkedList<Integer>();
+		MyLinkedList<String> myLinkedList = new MyLinkedList<String>();
 		
-		myLinkedList.add(1);
+
+		myLinkedList.add("Ming");
 		myLinkedList.remove(1);
-		myLinkedList.add(1);
-		myLinkedList.add(2);
+		myLinkedList.add(1,"Ming");
 		System.out.println("Current List size:"+ myLinkedList.size());
-		System.out.println("First element is:"+myLinkedList.getFirst());
+		System.out.println("Element in index 1:"+myLinkedList.get(1));
+		System.out.println("First element:"+myLinkedList.getFirst());
 		System.out.println("Last element:"+myLinkedList.getLast());
-		System.out.println("Element 1 located in index:"+myLinkedList.indexOf(1));
-		System.out.println("Does list contains element 2? "+myLinkedList.contains(2));
-		
-		//Handle exception
-		/*
-		try{
-			myLinkedList.remove(1);
-			myLinkedList.get(1);
-		}
-		catch(IndexOutOfBoundsException e)
-		{
-			System.out.println(e.getMessage());
-		}
-		*/
-		
-//		System.out.println(myLinkedList.toString());
+	
+
+		System.out.println("Element Ming located in index:"+myLinkedList.indexOf("Ming"));
+		System.out.println("Does list contains element Ming? "+myLinkedList.contains("Ming"));
+		System.out.println(myLinkedList.toString());
 		
 		//Test on push() pop(), clear()..
 		/*

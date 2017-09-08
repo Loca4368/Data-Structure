@@ -1,5 +1,6 @@
 package myList;
 
+import java.util.ConcurrentModificationException;
 import java.util.EmptyStackException;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -39,7 +40,7 @@ public class MyLinkedList<T> implements Iterable <T>{
 	private int size;
 	
 	//For counting times during traversal
-	private int modCounter;
+	private int modCounter = 0;
 	
 	//Constructor 
 	public MyLinkedList()
@@ -55,7 +56,7 @@ public class MyLinkedList<T> implements Iterable <T>{
 		
 		head.next = tail;
 		
-		this.modCounter = 0;
+		this.modCounter ++;
 		this.size = 0;
 	}
 	
@@ -74,32 +75,27 @@ public class MyLinkedList<T> implements Iterable <T>{
 	//Validate index
 	public boolean isIndexValid(int index)
 	{
+		//Need to be reviewed
 		if(index <= 0 || index > size())
 			return false;
 		return true;
 	}
 	
 	//Get node by index
-	private Node<T> getNode(int index)
+	private Node<T> getNode(int index, int lower, int upper)
 	{
-		
-		if(!isIndexValid(index))
-		{
-			throw new IndexOutOfBoundsException();
-		}
-		
-		modCounter = 0;
+		if(index < lower || index > upper){
+            throw new IndexOutOfBoundsException();
+        }
 		
 		Node<T> target;
 		//Scan from head in first Half 
-		if(index < size()/2)
+		if(index < size()/2 )
 		{
-			//Scan from head;
 			target = head;
 			for(int i=0; i<=index; i++)
 			{
 				target = target.next;
-				modCounter++;
 			}
 			
 		}
@@ -112,15 +108,18 @@ public class MyLinkedList<T> implements Iterable <T>{
 			for(int i=size(); i>=index; i--)
 			{
 				target = target.prev;
-				modCounter++;
+
 			}
-			
-			;
 		}
 		
 		//return the indexed node data
 		return target;
 	
+	}
+	
+	private Node<T> getNode(int index)
+	{
+		return getNode(index, 0 ,size());
 	}
 	
 	//Get index
@@ -129,6 +128,7 @@ public class MyLinkedList<T> implements Iterable <T>{
 		//By default not result matches
 		int result = -1;
 		
+		//Rest counter
 		modCounter = 0;
 		
 		//Scan from head
@@ -137,13 +137,12 @@ public class MyLinkedList<T> implements Iterable <T>{
 		for(int i=0; i<size();i++)
 		{
 			target = target.next;
+			
 			modCounter++;
 			//If matches
 			if(target.data == data)
 			{
-//				return result = modCounter;
 				result = modCounter;
-				break;
 			}
 		}
 		
@@ -153,17 +152,13 @@ public class MyLinkedList<T> implements Iterable <T>{
 	//Contains 
 	public boolean contains(T data)
 	{
-		return (-1 == (indexOf(data))? false: true);
+		return ((indexOf(data) == -1)? false: true);
 	}
 		
 	
 	//Get element by index
 	public T get(int index)
 	{
-		if(!isIndexValid(index))
-		{
-			throw new IndexOutOfBoundsException("Index Out of Bounds");
-		}
 		//Call private getNode() method
 		return getNode(index).data;
 	}
@@ -197,15 +192,11 @@ public class MyLinkedList<T> implements Iterable <T>{
 	//Add to first index by default
 	public void add(T data){
 		
-		//Create an newNode base on the input  
-		Node<T> newNode = new Node(data,null,null);
-		
 		//Get current first node
 		Node<T> currentFirstNode= head.next;
 		
-		//Redirect 4 pointers
-		newNode.prev = head;
-		newNode.next = currentFirstNode;
+		//Create an newNode base on the input  
+		Node<T> newNode = new Node (data,head,currentFirstNode);
 		
 		head.next = newNode;
 		currentFirstNode.prev = newNode;
@@ -216,6 +207,20 @@ public class MyLinkedList<T> implements Iterable <T>{
 		
 	//Add element by index 
 	public void add(int index, T data)
+	{	
+		Node<T> currentIndexNode = getNode(index-1);
+		
+		Node<T> newAddNode = new Node<T>(data, currentIndexNode,currentIndexNode.next);
+		
+		//Redirect Pointers
+		currentIndexNode.next =newAddNode;
+		
+		currentIndexNode.next.prev  = newAddNode; 
+		
+		size++;
+	}
+	
+	private Node<T> removeNode(int index)
 	{
 		if(!isIndexValid(index))
 		{
@@ -224,54 +229,39 @@ public class MyLinkedList<T> implements Iterable <T>{
 		
 		Node<T> currentIndexNode = getNode(index);
 		
-		Node<T> currentPrevNode = currentIndexNode.prev;
+		currentIndexNode.next= currentIndexNode.prev.next;
+		currentIndexNode.prev= currentIndexNode.next.prev;		
 		
-		Node<T> newAddNode = new Node<T>(data, null,null);
+//		currentIndexNode.next = null;
+//		currentIndexNode.prev = null;
 		
-		//Redirect Pointers
-		newAddNode = currentPrevNode.next;
-		newAddNode = currentIndexNode.prev;
-		
-		currentPrevNode = newAddNode.prev;
-		currentIndexNode = newAddNode.next;
-		
-		size++;
+		size--;
+		return currentIndexNode;
 	}
 	
 	
 	//Remove by data
 	public boolean remove(T data)
 	{
-		boolean result;
-		//Scan from head in first Half 
-		Node<T> target = head;
-		for(int i=0; i<=size(); i++)
-		{
-			target = target.next;
-			if(target.data == data)
-			{
-				result = true;
-			}
-		}
-		return false;
+		removeNode(indexOf(data));
+		return true;
 	}
 	
 	//Remove by index
-	public void remove(int index)
+	public T remove(int index)
 	{
-		if(!isIndexValid(index))
-		{
-			throw new IndexOutOfBoundsException();
-		}	
-		Node<T> currentIndexNode = getNode(index);
-		Node<T> currentPrevNode = currentIndexNode.prev;
-		Node<T> currentNexNode = currentIndexNode;
-		currentNexNode = currentPrevNode.next;
-		currentPrevNode = currentNexNode.prev;	
-		
-		size--;
+		return removeNode(index).data;
 	}
 	
+	//For Iterator
+	private T remove(Node<T> p){
+        p.prev.next = p.next;
+        p.next.prev = p.prev;
+        size--;
+        modCounter++;
+        return p.data;
+    }
+
 	//For Duque implementation
 	public void push(T newData)
 	{
@@ -288,7 +278,7 @@ public class MyLinkedList<T> implements Iterable <T>{
 		head.next = newNode;
 		currentFirstNode.prev = newNode;
 		
-		//Recorde
+		//Increase size
 		size++;
 	}
 	
@@ -325,55 +315,63 @@ public class MyLinkedList<T> implements Iterable <T>{
 		return result;
 	}
 		
+	//Custom Iterator
+	private class LinkedListIterator implements Iterator<T>{
+
+        private Node<T> current = head.next;
+
+        private int expectedModCount = modCounter;
+
+        private boolean okToRemove = false;
+
+        public boolean hasNext() {
+            return current != tail;
+        }
+
+        public T next() {
+            if(modCounter != expectedModCount){
+                throw new ConcurrentModificationException();
+            }
+            if(!hasNext()){
+                throw new NoSuchElementException();
+            }
+
+            T nextItem = current.data;
+            current = current.next;
+            okToRemove = true;
+            return nextItem;
+        }
+
+        public void remove(){
+            if(modCounter != expectedModCount){
+                throw new ConcurrentModificationException();
+            }
+            if(!okToRemove){
+                throw new IllegalStateException();
+            }
+            MyLinkedList.this.remove(current.prev);
+            expectedModCount++;
+            okToRemove = false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder content = new StringBuilder("[");
+        Node<T> p = head.next;
+        while(p!=tail.prev){
+        	content.append(p.data);
+        	content.append(", ");
+            p = p.next;
+        }
+        content.append(p.data);
+        content.append("]");
+        return content.toString();
+    }
+
 	public Iterator<T> iterator() {
 		// TODO Auto-generated method stub
-		return new MyIterator <T> ();
+		return null;
 	}
-	
-	//Custom Iterator
-	private class MyIterator <T> implements Iterator <T>
-	{
-		//Create a reference type of Node <T>, and point to head
-		@SuppressWarnings("unchecked")
-		Node<T> current = (Node<T>) head;
-
-		public boolean hasNext() {
-			// TODO Auto-generated method stub
-			
-			return current.next != tail;
-		}
-
-		public T next() {
-			// TODO Auto-generated method stub
-			T data = null;
-			if(!hasNext())
-			{
-				throw new IndexOutOfBoundsException();
-			}
-			data = current.data;
-			current = current.next;
-			return data;
-		}
-		
-	}
-
-	@Override
-	public String toString() {
-		Iterator<T> myIterator = this.iterator();
-		StringBuilder builder = new StringBuilder();
-		builder.append("MyLinkedList [");
-		if (!myIterator.hasNext())
-            return "[]";
-		for (;;) {
-			T data = myIterator.next();
-			builder.append(data == this ? "(this Collection)" : data);
-			if (! myIterator.hasNext())
-				return builder.append(']').toString();
-			builder.append(',').append(' ');
-            }
-	
-	}
-
-
 
 }

@@ -62,7 +62,12 @@ public class MyArrayList<T> implements Iterable <T>{
 		for(int i = 0;i<size();i++){
 			myArray[i] = old[i];
 			}
-		}
+		
+		/*Use Arrays.copyOf to ensure Capacity
+		if(myArray.length == size) {
+			myArray = Arrays.copyOf(myArray, 2 * size + 1);
+		}*/
+	}
 	
 	//Get Index Element
 	public T get(int index){
