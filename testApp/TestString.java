@@ -76,14 +76,16 @@ public class TestString {
         System.out.println("Convert int into string"+ st2);
         
         //One Convert from string into primitive type. 
-        //1: use Wrapper class; 2. use valueOf()
+        //1: use parseXXX in Wrapper class; 2. use valueOf()
   
         String source = "123456";
         Integer target = null;
-        int result = target.valueOf(source);//automatic unboxing
+        int result1 = target.parseInt(source);//automatic unboxing
         
-        System.out.println("Use int wrapper class:"+result);
-        System.out.println("Use valueOf :"+target.valueOf(source));
+        int result2 = target.valueOf(source);//automatic unboxing
+        
+        System.out.println("Use int wrapper class:"+result1);
+        System.out.println("Use valueOf :"+result2);
         System.out.println("============End of String Conversion test=========");
         
         //Test String, StringBuffer & StringBuilder
