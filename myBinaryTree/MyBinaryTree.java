@@ -1,3 +1,10 @@
+/*
+ * Description:
+ * Covert an array into Binary Tree;
+ * Three recursive traversal methods: preorder, inorder & postorder
+ *@Author: Ming
+ */ 
+
 package myBinaryTree;
 
 import java.util.LinkedList;

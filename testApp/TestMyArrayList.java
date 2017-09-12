@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import myList.*;
-public class TestDataStructure {
+public class TestMyArrayList {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
