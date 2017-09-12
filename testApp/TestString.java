@@ -122,18 +122,20 @@ public class TestString {
   		System.out.println("StringBuilder:"+sb);
   		System.out.println("============End of test on StringBuffer & StringBuilder=========");
 
-  		
+  		//Demon on String Comparison
+  		String c1 = "Ming";
+  		String c2 = "Ming";
+  		boolean result = (c1.compareTo(c2) == 0? true:false);
+  		System.out.println(result);
  
   		//Demo on Reverse String
         System.out.println("============Demo on String Reversion============");
         String testInput = "HelloWorld";
-        
         System.out.print(reverse(testInput));
-        
         
 	}
 	
-	//Reverse Stringr
+	//Reverse String
 	public  static String reverse(String originStr)
     {
 		if(originStr == null || originStr.length() <1)
